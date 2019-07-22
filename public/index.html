@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fetch API</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+    integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+
+  <!-- update the version number as needed -->
+  <script defer src="/__/firebase/6.3.1/firebase-app.js"></script>
+  <!-- include only the Firebase features as you need -->
+  <script defer src="/__/firebase/6.3.1/firebase-auth.js"></script>
+  <script defer src="/__/firebase/6.3.1/firebase-database.js"></script>
+  <script defer src="/__/firebase/6.3.1/firebase-messaging.js"></script>
+  <script defer src="/__/firebase/6.3.1/firebase-storage.js"></script>
+  <!-- initialize the SDK after all desired features are loaded -->
+  <script defer src="/__/firebase/init.js"></script>
+
+  <style media="screen">
+    body {
+      background: #ECEFF1;
+      color: rgba(0, 0, 0, 0.87);
+      font-family: Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    #mainDiv {
+      position: absolute;
+      /* top: 100%; */
+      display: none;
+      height: 100vh;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.3);
+      transition: all 0.6s;
+
+    }
+
+    #textconatiner {
+      position: relative;
+      height: 80vh;
+      width: 80%;
+      left: 10%;
+      transition: all 0.6s;
+
+    }
+
+    table {
+      position: absolute;
+    }
+
+    #text {
+      position: relative;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -404%);
+      display: flex;
+      flex-wrap: wrap;
+      height: 70vh;
+      width: 70%;
+      overflow-y: scroll;
+      transition: all 0.6s;
+    }
+
+    #close {
+      font-size: 45px;
+      position: relative;
+      left: 10%;
+      top: 9%;
+    }
+
+    #text::-webkit-scrollbar {
+      width: 0% !important
+    }
+
+    #mainDiv1 {
+      position: absolute;
+      /* top: 100%; */
+      display: none;
+      height: 100vh;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.3);
+      transition: all 0.6s;
+
+    }
+
+    #textconatiner1 {
+      position: relative;
+      height: 80vh;
+      width: 80%;
+      left: 10%;
+      transition: all 0.6s;
+
+    }
+
+    #text1 {
+      position: relative;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -404%);
+      display: flex;
+      flex-wrap: wrap;
+      height: 70vh;
+      width: 70%;
+      overflow-y: scroll;
+      transition: all 0.6s;
+    }
+
+    #close1 {
+      font-size: 45px;
+      position: relative;
+      left: 10%;
+      top: 9%;
+    }
+
+    #text1::-webkit-scrollbar {
+      width: 0% !important
+    }
+
+    #text div {
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <table id="table" class="table table-striped">
+    <thead class="table-dark">
+
+      <tr>
+        <th>S:no</th>
+        <th>Title</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody id="tbody">
+
+    </tbody>
+  </table>
+  <div id="mainDiv">
+    <div id="textconatiner">
+      <div id="close"><i class="far fa-times-circle" onclick="off()"></i></div>
+      <div id="text">
+      </div>
+    </div>
+  </div>
+  <div id="mainDiv1">
+    <div id="textconatiner1">
+      <div id="close1"><i class="far fa-times-circle" onclick="off1()"></i></div>
+      <div id="text1">
+      </div>
+    </div>
+  </div>
+  <script>
+    function title() {
+      fetch("https:jsonplaceholder.typicode.com/albums")
+        .then(title => {
+          return title.json()
+        }).then(json => {
+          for (var i = 0; i < json.length; i++) {
+            document.getElementById('tbody').innerHTML += `
+            <tr>
+              <td>${json[i].id}</td>
+              <td>${json[i].title}</td>
+              <td><button class="btn btn-dark" onclick = "view(${i + 1})">View</button></td>
+            </tr>
+            `
+            // console.log(json[i].title)
+          }
+        })
+    }
+    title()
+    function view(i) {
+      document.getElementById('mainDiv').style.display = "block"
+      fetch(`https:jsonplaceholder.typicode.com/photos?albumId=${i}`)
+        .then(arr => {
+          return arr.json()
+        }).then(url => {
+          for (var i = 0; i < url.length; i++) {
+            document.getElementById("text").innerHTML += `<div onclick = "pic(${url[i].id})"><img src = "${url[i].thumbnailUrl}" /></div>`
+          }
+          setTimeout(() => {
+            document.getElementById('text').style.transform = "translate(-50%, -50%)"
+          }, 300)
+          // console.log(url)
+        })
+    }
+    function pic(i) {
+      document.getElementById('mainDiv1').style.display = "block"
+      fetch(`https:jsonplaceholder.typicode.com/photos?id=${i}`)
+        .then(url => {
+          return url.json()
+        }).then(url => {
+          for (var i = 0; i < url.length; i++) {
+          console.log(url[i].url)
+            // document.getElementById("text").innerHTML += `<div onclick = "pic(${url[i].id})"><img src = "${url[i].thumbnailUrl}" /></div>`
+          document.getElementById("text1").innerHTML = `<div><img src="${url[i].url}"></div>`
+          }
+          setTimeout(() => {
+            document.getElementById('text1').style.transform = "translate(-50%, -50%)"
+          }, 300)
+        })
+    }
+    function off() {
+      setTimeout(() => {
+        document.getElementById('mainDiv').style.display = "none"
+      }, 300)
+      document.getElementById('text').style.transform = "translate(-50%, -404%)"
+
+    }
+    function off1() {
+      setTimeout(() => {
+        document.getElementById('mainDiv1').style.display = "none"
+      }, 300)
+      document.getElementById('text1').style.transform = "translate(-50%, -404%)"
+
+    }
+  </script>
+</body>
+
+</html>
